@@ -24,7 +24,7 @@ const projects: Project[] = [
     ],
     impact: "Developed during intense end-semester periods, College Daddy addresses critical pain points in student life. By streamlining academic planning and resource management, it has become an indispensable tool for students seeking to optimize their educational journey.",
     demoLink: "https://collegedaddy.tech",
-    image: "/college-daddy-preview.png",
+    image: "/collegedaddy.png",
     snippet: "Track your academic progress, access study materials, and boost productivity with our comprehensive suite of student tools.",
     techStack: ["React", "TypeScript", "Tailwind CSS", "Node.js"]
   },
@@ -54,13 +54,22 @@ const projects: Project[] = [
     ],
     impact: "Nestiphy addresses the complex challenges of modern asset management, providing businesses with a reliable and efficient solution that significantly reduces asset loss and improves operational efficiency.",
     demoLink: "https://nestiphy.vercel.app",
-    image: "/placeholder-project.jpg",
+    image: "/project-placeholder.jpg",
     snippet: "Streamline your asset management with our enterprise-grade tracking solution.",
     techStack: ["React", "Node.js", "MongoDB", "WebSocket"]
   }
 ];
 
 const Projects: React.FC = () => {
+  const [imageError, setImageError] = React.useState<{[key: string]: boolean}>({});
+
+  const handleImageError = (projectTitle: string) => {
+    setImageError(prev => ({
+      ...prev,
+      [projectTitle]: true
+    }));
+  };
+
   return (
     <section id="projects" className="py-20 px-4 md:px-8 bg-gradient-to-b from-gray-900 to-gray-800">
       <div className="max-w-6xl mx-auto">
@@ -74,11 +83,21 @@ const Projects: React.FC = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
                 {/* Image Section */}
                 <div className="relative overflow-hidden rounded-xl h-[300px] group-hover:shadow-2xl transition-all duration-300">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {!imageError[project.title] ? (
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-300"
+                      onError={() => handleImageError(project.title)}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-purple-900/30 to-gray-800 flex items-center justify-center">
+                      <div className="text-center p-6">
+                        <h4 className="text-xl font-semibold text-purple-400 mb-2">{project.title}</h4>
+                        <p className="text-gray-400 text-sm">{project.snippet}</p>
+                      </div>
+                    </div>
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent">
                     <div className="absolute bottom-4 left-4 right-4">
                       <p className="text-white text-sm font-medium italic">{project.snippet}</p>
